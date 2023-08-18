@@ -5,7 +5,7 @@ namespace App\Providers;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Database\Eloquent\Builder;
-
+use Illuminate\Support\Facades\Schema;
 class SqlHelperProvider extends ServiceProvider
 {
     /**
@@ -34,7 +34,7 @@ class SqlHelperProvider extends ServiceProvider
             return $this->where('active',1)->orderBy('sort','ASC')->orderBy('created_at','DESC');
         }); 
         Model::unguard();
-
+        Schema::defaultStringLength(191);
         Builder::macro('resolveJson',function(string $columnName="attributes",string $sortByColumn='sort',string $order='ASC'){
 
             
