@@ -329,7 +329,7 @@ const dataStore = () => {
                 imageFiles:base64ImageArray,
         })).post(route(`${remoteRouteNamePrefix}.store`), {
         preserveState: true,
-       onFinish: () => { form.reset(); showDialogModal.edit = false; },
+       onSuccess: () => { form.reset(); showDialogModal.edit = false; },
     });
 }
 const openDelete = (id = null, handling = null) => {

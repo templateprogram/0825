@@ -23,12 +23,9 @@ class {{ class }} extends FormRequest
      */
     public function rules(): array
     {
-        return ($this->method==='PUT')
-        ?[
-        'name'=>['required',New NameRule],
-         // 'back_body'=>[new BackBodyRule]
-        ]
-        :[];
+        return ($this->isMethod('PUT'))?[]:
+        ['name'=>['required',New NameRule]];
+      
       
         
     }
