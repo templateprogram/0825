@@ -1,0 +1,173 @@
+<script setup>
+import { ref, watch, onMounted,onBeforeMount } from 'vue';
+import { router, Head,useForm} from '@inertiajs/vue3';
+import TextInput from '@/Components/TextInput.vue';
+import TinyMce from '@/Components/TinyMce.vue';
+import FileUpload from '@/Components/FileUpload.vue';
+import FileList from '@/Components/FileList.vue';
+import ExpandMenu from '@/Components/ExpandMenu.vue';
+import ThemeColor from '@/Components/Shared/ThemeColor.vue';
+import AdminLayout from '@/Layouts/AdminLayout.vue';
+import custom from '@/Components/AdminSharedInput/custom.vue';
+import PrimaryButton from '@/Components/PrimaryButton.vue';
+const remoteRouteNamePrefix="{{ namePrefixOfRoute }}";
+const props = defineProps({
+    data:Object,
+})
+const base64ImageArray = {};
+const giveBase64ImageArray=(baseX,column,multiple)=>{
+    base64ImageArray[column]={
+        'multiple':multiple,
+        'blobFiles':baseX, //  it is array
+    }
+}
+const _formInputs={
+    'url':{
+        'name':'圖片單傳',
+        'type':'img',
+        'multiple':false,
+    },
+    "back_body": {
+        'name':'詳細介紹',
+        'type':'textArea',
+    },
+}
+const initForm=()=>{
+    let returned={};
+    for(const binder in _formInputs)
+    {
+        if(_formInputs[binder]?.type=='img')
+        {
+            continue;
+        }
+        returned[binder]=null;
+    }
+    return returned;
+}
+onBeforeMount(()=>{
+          // TODO watch
+        //   console.log(props);
+    if(props.data)
+    {
+        for(const _columnName in _formInputs)
+        {
+            form[_columnName]=props.data[_columnName];
+        }
+    }
+
+})
+const form = useForm({
+    ...initForm(),
+});
+const saveform=async ()=>{
+    if((props?.data?.id??null)===null)
+    {
+       form.transform((data)=>({
+            ...data,
+            imageFiles:base64ImageArray
+        })).post(route(`${remoteRouteNamePrefix}.store`),{onFinish:()=>{
+                router.get(route(`${remoteRouteNamePrefix}.index`));
+        }})
+        return ;
+    }
+    else
+    {
+         form.transform((data)=>({
+        ...data,
+        imageFiles:base64ImageArray
+        })).put(route(`${remoteRouteNamePrefix}.update`, props.data.id),{onFinish:()=>{
+                router.get(route(`${remoteRouteNamePrefix}.index`));
+        }})
+    }
+    
+
+
+
+}
+/* 重要:
+若不在初始化 form 的時候 將所有key值進行一次賦值，
+之後定得使用transform 進行賦值，因為useForm 本身是代理，因此對於其直接賦值的變量。
+並不會影響post出去的數值，只有在form 進行 v-model的數值才會被傳出去，除非有先進行transform
+*/
+
+const search = ref('');
+
+const res = () => {
+    router.get('/example', { search: search.value }, { preserveState: true });
+}
+
+const debounce = (fn, wait) => {
+    let timer;
+    return function (...args) {
+        if (timer) {
+            clearTimeout(timer); // clear any pre-existing timer
+        }
+        const context = this; // get the current context
+        timer = setTimeout(() => {
+            fn.apply(context, args); // call the function if time expires
+        }, wait);
+    }
+}
+
+watch(search, () => {
+    debounce(res(), 1000);
+})
+
+const currentTime = ref('00:00:00')
+
+
+onMounted(() => {
+    // currentTime.value = `${hours}:${minutes}:${seconds}`;
+    setInterval(() => {
+        const date = new Date()
+        const hours = ('0' + date.getHours()).slice(-2)
+        const minutes = ('0' + date.getMinutes()).slice(-2)
+        const seconds = ('0' + date.getSeconds()).slice(-2)
+        currentTime.value = `${hours}:${minutes}:${seconds}`
+    }, 1000)
+})
+
+const test = ref('');
+const testImg = ref([]);
+const errorsMessage = ref('');
+
+
+</script>
+
+<template>
+    <AdminLayout>
+        <Head :title="'範本'" />
+    <main class="min-h-screen text-black bg-white dark:text-white dark:bg-gray-950">
+        <ThemeColor />
+        <div class="flex flex-col items-center justify-center h-full space-y-4">
+            <div class="w-full max-w-2xl mx-auto space-y-4">
+
+                <!-- 展開選單 -->
+
+                <!-- 編輯器 -->
+                <!-- <TinyMce v-model="test" :fileUploadUrl="'/tinymce'" /> -->
+                    <div v-for="(_ui,_columnName) in _formInputs" v-bind:key="_columnName">
+                                <custom
+                                v-model:changing="form[_columnName]"
+                                :columnName="_columnName"
+                                :config="_ui"
+                                :error="form.errors[_columnName]" 
+                                @toggleLoading="loading=!loading"
+                                @giveBase64ImageArray="giveBase64ImageArray"
+                                ></custom>
+                       
+
+    
+                    </div>
+                <!-- 檔案上傳 -->
+                <PrimaryButton @click.prevent="saveform">保存</PrimaryButton>
+                <!-- <button @click="router.post('/file-upload', { fileItems: testImg }, { onFinish: () => testImg = [] })">圖片上傳</button> -->
+
+            </div>
+        </div>
+    </main>
+    </AdminLayout>
+
+</template>
+
+<style scoped></style>

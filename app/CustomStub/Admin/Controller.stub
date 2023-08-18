@@ -1,0 +1,131 @@
+<?php
+
+namespace App\Http\Controllers\Admin;
+
+use Inertia\Inertia;
+use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\{{ modelName }}Request;
+use App\Models\{{ modelName }} as modelTarget;
+use App\ServicesContainer\RequestResolver;
+
+/*
+最新消息
+*/
+class {{ class }} extends Controller
+{
+    private $model;
+    public function __construct(){
+            $this->model=app(modelTarget::class);
+    }
+    // public function __construct(
+    //     private FakeImageResolver $requestInterface,    
+    // ){
+    //     dd($requestInterface);
+    // }
+    protected function rules()
+    {
+        return [
+        'name'=>['required','string','max:255'],
+        'back_body'=>['nullable','string','max:20000'],
+        ];
+        // return ['required', 'string', 'max:255'],
+    }
+    /**
+     * Display a listing of the resource.
+     */
+    public function index()
+    {
+        $data = modelTarget::when(
+            request()->search,
+            fn ($query, $data) =>
+            $query->where('email', 'like', '%' . $data . '%')
+                ->orWhere('name', 'like', '%' . $data . '%')
+        )
+            ->when(
+                request()->dateSort === 'ASC' ? 'ASC' : 'DESC',
+                fn ($query, $data) =>
+                $query->orderBy('created_at', $data)
+            )
+            ->when(
+                request()->startDate,
+                fn ($query, $data) =>
+                $query->whereDate('created_at', '>=', $data)
+            )
+            ->when(
+                request()->endDate,
+                fn ($query, $data) =>
+                $query->whereDate('created_at', '<=', $data)
+            )
+            ->orderBy('created_at', 'DESC')->with('imgs')
+            ->paginate(request()->perPage ?? 10)->withQueryString();
+
+                
+        return Inertia::render('Admin/{{ prefix }}/{{ modelName }}', [
+            'theDataAllId' => modelTarget::all()->pluck('id'),
+            'theData' => $data,
+            'theFilterVariables' => request()->only(['id', 'startDate', 'endDate', 'search', 'dateSort', 'perPage']),
+            // 查詢id
+            'theSingleData' => modelTarget::query()->when(
+                request('id'),
+                fn ($query) =>
+                $query->with('imgs')->find(request('id'))
+            ),
+        ]);
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     */
+    public function create()
+    {
+        //
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function store({{ modelName }}Request $request,RequestResolver $serve)
+    {
+        //
+        $serve->store($this->model);
+    }
+
+    /**
+     * Display the specified resource.
+     */
+    public function show(modelTarget $fakeImage)
+    {
+        //
+        return $fakeImage;
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit($id)
+    {
+        //
+
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update({{ modelName }}Request $request,$id,RequestResolver $serve)
+    {
+        //
+        $serve->update($id,$this->model);
+    
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(Request $request, int $id)
+    {
+        //
+        modelTarget::where('id', $id)->delete();
+        session()->flash('flash.banner', '刪除完畢');
+    }
+}

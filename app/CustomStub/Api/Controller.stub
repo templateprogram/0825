@@ -1,0 +1,97 @@
+<?php
+
+namespace {{ namespace }};
+
+use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use App\Http\helper\image\TheImgUpload;
+use App\Models\{{ modelName }} as modelTarget;
+
+/*
+最新消息
+*/
+class {{ class }} extends Controller
+{
+
+    /**
+     * Display a listing of the resource.
+     */
+    public function index()
+    {
+        //
+        $data=modelTarget::first();
+        return $data;
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     */
+    public function create()
+    {
+        //
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function store(Request $request)
+    {
+        //
+        if ($request->postName === 'delete') {
+            modelTarget::destroy($request->id);
+            session()->flash('flash.bannerStyle', 'red');
+            session()->flash('flash.banner', '刪除完畢');
+        }
+
+        $valid=$request->validate($this->rules());
+  
+        $theTarget=modelTarget::create($valid);
+        TheImgUpload::multipleFile($theTarget,$request);
+        session()->flash('flash.bannerStyle', 'green');
+        session()->flash('flash.banner', '新增完畢');
+    }
+
+    /**
+     * Display the specified resource.
+     */
+    public function show(int $id)
+    {
+        return modelTarget::where('id',$id)?->first();
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(modelTarget $fakeImage)
+    {
+        //
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(Request $request, int $id)
+    {
+        //
+        $valid=$request->validate($this->rules());
+        $theTarget=modelTarget::where('id',$id)?->first();
+        if(is_null($theTarget))
+        {
+            return;
+        }
+        modelTarget::where('id',$id)->update($valid);
+        session()->flash('flash.bannerStyle', 'green');
+        session()->flash('flash.banner', '更新成功');
+        TheImgUpload::multipleFile($theTarget,$request);
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(Request $request, int $id)
+    {
+        //
+        modelTarget::where('id', $id)->delete();
+        session()->flash('flash.banner', '刪除完畢');
+    }
+}
