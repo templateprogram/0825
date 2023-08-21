@@ -60,7 +60,7 @@ const init = reactive({
     branding: false, //要不要顯示tinyMCE品牌
     resize: false, //編輯器可以自己選取大小
     promotion: false, //開啟更新通知
-    toolbar_sticky: true, //固定工具列在上面不受捲軸影響
+    toolbar_sticky: false, //固定工具列在上面不受捲軸影響
     toolbar_mode: 'sliding', //可能的值： 'floating'、'sliding'、'scrolling'或'wrap' 下拉樣式
     skin: useSkin.value, //黑暗版外表
     content_css: useCss.value, //黑暗版身體
