@@ -47,7 +47,13 @@ import initForm from '@/helpers/form/initializeForm';
 // import {clearobj} from '@/helpers/objectWithoutKey'
 // 檔案上傳，檔案列表
 
-
+const remoteRouteNamePrefix="{{ namePrefixOfRoute }}";
+const props = defineProps({
+    theData: Object,
+    theSingleData: Object,
+    theFilterVariables: Object,
+    theDataAllId: Object,
+});
 // 數據資料
 // 尋找:ctrl+f >> "表單開始"
 
@@ -114,13 +120,7 @@ const _formInputs={
 */
 
 
-const remoteRouteNamePrefix="{{ namePrefixOfRoute }}";
-const props = defineProps({
-    theData: Object,
-    theSingleData: Object,
-    theFilterVariables: Object,
-    theDataAllId: Object,
-});
+
 // 彈跳對話視窗
 const showDialogModal = reactive({
     sort: false,
