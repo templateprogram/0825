@@ -72,6 +72,10 @@ class {{ class }} extends Controller
                 $query->with('imgs')->find(request('id'))
             ),
         ]);
+        /*
+            page
+        */
+                // return Inertia::render('Admin/{{ prefix }}/{{ modelName }}',  ['data'=>modelTarget::first()]);
     }
 
     /**
