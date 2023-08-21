@@ -129,12 +129,13 @@ class TheImgUpload
     {
         //Img has many Relation string 關係之間的函數名稱
         // dd($imagesConfiguration);
-        if(!is_null($clearingPath=$eloquentModel->{$column}))
-        {
-            self::destroyImg($column,$clearingPath);
-        }
+      
         if(!empty($imagesConfiguration['blobFiles']))
         {
+            if(!is_null($clearingPath=$eloquentModel->{$column}))
+            {
+                self::destroyImg($column,$clearingPath);
+            }
             $date = date("Ymd");
             $nowTime = date("his");
             /*

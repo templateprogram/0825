@@ -2,6 +2,7 @@
 
 namespace App\ServicesContainer;
 
+use Illuminate\Support\Facades\Schema;
 use App\Http\helper\image\TheImgUpload;
 
 class RequestResolver
@@ -17,6 +18,7 @@ class RequestResolver
     }
     private function upload(\Illuminate\Database\Eloquent\Model $eloquentModel)
     {
+
         TheImgUpload::multipleFile($eloquentModel,$this->images);
     }
     private function imgDataAttributesEdit(\Illuminate\Database\Eloquent\Model $model)
@@ -33,8 +35,9 @@ class RequestResolver
             }
             else
             {
-                if(!empty($out['data']))
+                if(Schema::hasColumn($model->getModel()->getTable(),'img_attributes'))
                 {
+
                     $model->img_attributes=json_encode($out['data']);
                 }
                 $model->save();
