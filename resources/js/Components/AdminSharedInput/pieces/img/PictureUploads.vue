@@ -70,7 +70,7 @@ const imgData=ref((Array.isArray(partials?.binder))?partials?.binder.map((single
     single.attributes=JSON.parse(single.attributes);
     imgDataAttributes[single.id]=single.attributes;
     return {'dataSrc':single?.url??'','src':`${window.location.origin+'/storage/'+(single?.url??'')}`,...objectWithoutKey(single,'src')}
-}):[{'dataSrc':partials?.binder,'src':(partials?.binder)?`${window.location.origin+'/storage/'+(partials?.binder??'')}`:null,'attributes':(JSON.parse(partials?.imgAttributes??'{}'))[partials?.columnName]??null}]);
+}):(partials?.binder)?[{'dataSrc':partials?.binder,'src':(partials?.binder)?`${window.location.origin+'/storage/'+(partials?.binder??'')}`:null,'attributes':(JSON.parse(partials?.imgAttributes??'{}'))[partials?.columnName]??null}]:[]);
 const toggleLoading=()=>{
     emit('toggleLoading');
 }
@@ -128,8 +128,7 @@ onBeforeMount(() => {
     // console.log();
     if(partials?.config?.multiple===false)
     {
-
-        imgDataAttributes[partials.columnName]=imgData.value[0].attributes;
+        imgDataAttributes[partials.columnName]=imgData.value[0]?.attributes;
     }
     emit('giveImgDataAttributes',partials.columnName,imgDataAttributes,partials?.config?.multiple??false);
     emit('giveBase64ImageArray',{},partials.columnName,partials?.config?.multiple??false);
@@ -177,7 +176,7 @@ onBeforeMount(() => {
 }); -->
     <div>
     <p class="pb-2">第一張為主圖</p>
-    <FileList ref="fileList" @key="`editImage-${a?.id??index}`" v-for="(a, index) in imgData" :mainImg="0" v-if="a?.dataSrc" @deleteImg="deleteImg(index,a.dataSrc)"
+    <FileList ref="fileList" @key="`editImage-${a?.id??index}`" v-for="(a, index) in imgData" :mainImg="0"  @deleteImg="deleteImg(index,a.dataSrc)"
         @toggleLoading="toggleLoading" :src="a.src">
         <div v-for="(b,viAttribute) in a?.attributes??attachmentAttribute" @key="`property-${viAttribute}-${a?.id??index}`">
             <p v-text="attachment[viAttribute]?.title??''">
