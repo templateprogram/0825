@@ -14,6 +14,8 @@ return new class extends Migration
         Schema::create('products', function (Blueprint $table) {
             $table->id();
             $table->softDeletes();
+            // $table->longText('url')->nullable();
+            // $table->json('img_attributes')->nullable();
             $table->string('name');
             $table->longText('back_body')->nullable();
             $table->boolean('active')->default(1);
