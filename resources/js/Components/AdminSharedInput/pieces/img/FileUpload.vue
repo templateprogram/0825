@@ -115,7 +115,7 @@ const sortingPreviews=()=>{
                     <p class=text-center>或</p>
                     <p>點擊選擇檔案上傳</p>
                 </div>
-                <p class="text-teal-500">{{ `最大上傳檔案 ${reading.maxFileNumber} 筆` }}</p>
+                <p class="text-teal-500" v-if="multiple">{{ `最大上傳檔案 ${reading.maxFileNumber} 筆` }}</p>
                 <p class="text-pink-500" v-if="reading.error.value!=null">{{ reading.error }}</p>
             </div>
         </label>
