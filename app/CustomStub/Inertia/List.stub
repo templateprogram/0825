@@ -485,10 +485,10 @@ const pageCategoryTitle = computed(() => {
 
 
                 <!-- 圖片 -->
-                <section v-if="false" class="w-full md:max-w-[100px]">
+             <section v-if="_singleData.url!=undefined" class="w-full md:max-w-[100px]">
                     <div class="relative pb-[100%] w-full ">
                         <img class="absolute inset-x-0 object-cover w-full h-full rounded"
-                            src="https://source.unsplash.com/random/?dog" />
+                            :src="`/storage/${_singleData.url}`" />
                     </div>
                 </section>
 
