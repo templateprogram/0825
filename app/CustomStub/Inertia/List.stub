@@ -53,6 +53,7 @@ const props = defineProps({
     theSingleData: Object,
     theFilterVariables: Object,
     theDataAllId: Object,
+    classificationData:Object,
 });
 // 數據資料
 // 尋找:ctrl+f >> "表單開始"
