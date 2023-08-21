@@ -23,7 +23,7 @@ class RequestResolver
     }
     private function imgDataAttributesEdit(\Illuminate\Database\Eloquent\Model $model)
     {
-        foreach($this->request->imgDataAttributes as $key=>$out)
+        foreach($this?->request?->imgDataAttributes??[] as $key=>$out)
         {
             if($out['multiple']===true)
             {
