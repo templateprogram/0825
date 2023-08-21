@@ -16,6 +16,13 @@ class {{ class }} extends Controller
     /**
      * Display a listing of the resource.
      */
+     
+    private $model;
+    public function __construct()
+    {
+        $this->model=app(modelTarget::class);
+    }
+    
     public function index(FilteredRequest $request)
     {
         //
