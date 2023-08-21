@@ -23,7 +23,7 @@ class {{ class }} extends FormRequest
      */
     public function rules(): array
     {
-        return ($this->isMethod('PUT'))?[]:
+        return ($this->isMethod('PATCH'))?[]:
         ['name'=>['required',New NameRule]];
       
       
