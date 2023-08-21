@@ -3,7 +3,6 @@
 namespace App\Http\helper\image;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Storage;
 // 此為處理base 64 的檔案
 // 然而真正的上傳出現在 ImageHelper裡面
@@ -148,10 +147,12 @@ class TheImgUpload
                     // 去除base64類型剩下圖片
             $image = str_replace($replace, '', $image_64);
             $storeColumn=class_basename($eloquentModel)."/".$date . '/' . $nowTime . '-' . Str::uuid() . '.' . $extension;
-            $imgAttribute=(is_null($eloquentModel->img_attributes))?[]:json_decode($eloquentModel->img_attributes,true);
-            // dd($imgAttribute);
-            $imgAttribute[$column]=@$imagesConfiguration['attributeArray'][0];
-            $eloquentModel->img_attributes=json_encode($imgAttribute);
+            if(\Illuminate\Support\Facades\Schema::hasColumn($eloquentModel->getModel()->getTable(),'img_attributes'))
+            {
+                $imgAttribute=(is_null($eloquentModel?->img_attributes))?[]:json_decode($eloquentModel->img_attributes,true);
+                $imgAttribute[$column]=@$imagesConfiguration['attributeArray'][0];
+                $eloquentModel->img_attributes=json_encode($imgAttribute);
+            }
             $eloquentModel->{$column}=$storeColumn;
             $eloquentModel->save();
             Storage::disk('public')->put($storeColumn, base64_decode($image));

@@ -33,7 +33,10 @@ class RequestResolver
             }
             else
             {
-                $model->img_attributes=json_encode($out['data']);
+                if(!empty($out['data']))
+                {
+                    $model->img_attributes=json_encode($out['data']);
+                }
                 $model->save();
             }
             // dd($out->multiple);
