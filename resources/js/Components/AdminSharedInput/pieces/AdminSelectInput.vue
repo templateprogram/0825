@@ -12,14 +12,14 @@ const uploadSelectionResult=(val)=>{
     emit('update:binder',val);
 }
 const currentSelection=computed(()=>{
-   let isSelected=partials.config?.selection.filter((val)=>val.id==partials.binder);
-   return (isSelected[0]?.name)??null;
+   let isSelected=partials.config?.selection?.filter((val)=>val.id==partials.binder);
+   return (isSelected)?isSelected[0]?.name:null;
 })
 </script >
     
 
 <template>
-    <SelectionMenu>
+    <SelectionMenu v-if="partials.config?.selection!=undefined">
         <template #input>
             <TextInput disabled v-bind:value="currentSelection" class="w-full p-4"></TextInput>
         </template>
