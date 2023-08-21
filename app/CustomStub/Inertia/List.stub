@@ -65,6 +65,11 @@ const _status={
     // }
 };
 const _formInputs={
+    // "up_id":{
+    //     'name':'分類',
+    //     'type':'dropDown',
+    //     'selection':props.classificationData,
+    // },
     //'imgs':{
     //    'name':'圖片單傳',
     //   'type':'img',
